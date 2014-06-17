@@ -44,7 +44,6 @@ func SaveUser(msg goweixin.Message) {
 	if err != nil {
 		panic(err)
 	}
-
 	fileName := "./data/user.json"
 	err = ioutil.WriteFile(filename, bytes, os.ModePerm)
 	if err != nil {
