@@ -6,6 +6,7 @@ import (
 	"io/ioutil"
 	"log"
 	"os"
+	"strings"
 )
 
 type WeixinHandler struct {
@@ -13,10 +14,18 @@ type WeixinHandler struct {
 }
 
 func (w *WeixinHandler) Text(msg goweixin.Message) goweixin.Replay {
-	return w.Default(msg)
+	c := strings.ToLower(msg.Content())
+	log.Println("c:", c)
+	switch c {
+	case "goelia":
+		return goweixin.ReplyText("http://ohoh.co/goelia/subscribe/news/" + msg.ToUserName())
+	default:
+		return goweixin.ReplyText("你说的\"" + msg.Content() + "\"" + "我们没找到相关内容")
+	}
+
 }
 func (w *WeixinHandler) Image(msg goweixin.Message) goweixin.Replay {
-	return w.Default(msg)
+	return goweixin.ReplyText("你发的是图片")
 }
 func (w *WeixinHandler) Location(msg goweixin.Message) goweixin.Replay {
 	return w.Default(msg)
