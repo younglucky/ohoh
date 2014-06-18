@@ -52,6 +52,8 @@ func (w *WeixinHandler) Event(msg goweixin.Message) goweixin.Replay {
 		}
 		SaveUser(msg)
 		return goweixin.ReplyText("欢迎关注，hello world!" + s)
+	default:
+		return w.Default(msg)
 	}
 
 }
