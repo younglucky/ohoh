@@ -35,11 +35,25 @@ func (w *WeixinHandler) Link(msg goweixin.Message) goweixin.Replay {
 }
 func (w *WeixinHandler) Event(msg goweixin.Message) goweixin.Replay {
 	log.Println("event:", msg)
-	if msg.Event() == "subscribe" {
+	e := msg.Event()
+	ek := msg.EventKey()
+	switch {
+	case e == "unsubscribe": //取消订阅
+		log.Println("取消关注")
+		return w.Default(msg)
+	case e == "subscribe":
+		s := ""
+		if ek == "" { //关注
+			s = "查找关注"
+		} else if strings.HasPrefix(ek, "qrscene_") { //未关注时的扫码关注
+			s = "扫码关注"
+		} else { //已关注后的扫码
+			s = "你已关注"
+		}
 		SaveUser(msg)
-		return goweixin.ReplyText("欢迎关注，hello world!")
+		return goweixin.ReplyText("欢迎关注，hello world!" + s)
 	}
-	return w.Default(msg)
+
 }
 func (w *WeixinHandler) Voice(msg goweixin.Message) goweixin.Replay {
 	return w.Default(msg)
